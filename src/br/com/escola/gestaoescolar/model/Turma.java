@@ -1,4 +1,4 @@
-package br.com.escola.gestaoescolar.dominio;
+package br.com.escola.gestaoescolar.model;
 
 import java.time.LocalDate;
 
