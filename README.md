@@ -16,18 +16,19 @@ Este projeto foi desenvolvido com foco em **boas práticas profissionais** e org
 A interface foi desenvolvida com **Java Swing**, oferecendo um ambiente visual amigável para o usuário final.
 Os formulários contam com campos de entrada, menus suspensos, botões de ação e mensagens de confirmação/erro.
 
-📸 **Exemplo de Telas**
-
 | Tela de Cadastro Curso                                                     
 | ------------------------------------------
+
 | ![Menu Principal](docs/Interfa-cadastro-curso-enum.png) |
 
 | Tela de Cadastro de Turma 
 | ------------------------------------------
-| ![Cadastro Curso](Interfa-cadastro-turma-enum.png)
+
+| ![Cadastro Curso](docs/Interfa-cadastro-turma-enum.png)
 
 | Tela de Listar Estudante 
 | ------------------------------------------
+
 | ![Cadastro Turma](docs/Interfa-lista-estudante-curso.png) 
 
 ---
