@@ -17,17 +17,19 @@ A interface foi desenvolvida com **Java Swing**, oferecendo um ambiente visual a
 Os formulários contam com campos de entrada, menus suspensos, botões de ação e mensagens de confirmação/erro.
 
 | Tela de Cadastro Curso                                                     
-| ------------------------------------------
+
 
 | ![Menu Principal](docs/Interfa-cadastro-curso-enum.png) |
 
+
 | Tela de Cadastro de Turma 
-| ------------------------------------------
+
 
 | ![Cadastro Curso](docs/Interfa-cadastro-turma-enum.png)
 
+
 | Tela de Listar Estudante 
-| ------------------------------------------
+
 
 | ![Cadastro Turma](docs/Interfa-lista-estudante-curso.png) 
 
