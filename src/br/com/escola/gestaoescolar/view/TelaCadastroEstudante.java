@@ -17,6 +17,8 @@ public class TelaCadastroEstudante extends JPanel {
     private final EstudanteController estudanteController = new EstudanteController();
     private final CursoController cursoController = new CursoController();
 
+    private Estudante estudanteAtualizado;  // atributo para controlar edição
+
     public TelaCadastroEstudante() {
         setLayout(null);
         setPreferredSize(new Dimension(600, 400));
@@ -79,7 +81,7 @@ public class TelaCadastroEstudante extends JPanel {
 
         carregarCursos();
 
-        btnSalvar.addActionListener(e -> salvarEstudante());
+        btnSalvar.addActionListener(e -> salvarOuAtualizarEstudante());
         btnCancelar.addActionListener(e -> limparCampos());
     }
 
@@ -91,7 +93,7 @@ public class TelaCadastroEstudante extends JPanel {
         }
     }
 
-    private void salvarEstudante() {
+    private void salvarOuAtualizarEstudante() {
         try {
             Curso cursoSelecionado = (Curso) comboCurso.getSelectedItem();
             if (cursoSelecionado == null) {
@@ -99,26 +101,39 @@ public class TelaCadastroEstudante extends JPanel {
                 return;
             }
 
-            Estudante estudante = new Estudante(
-                    txtNome.getText(),
-                    txtCpf.getText(),
-                    txtEmail.getText(),
-                    txtTelefone.getText(),
-                    txtEndereco.getText(),
-                    cursoSelecionado
-            );
+            if (estudanteAtualizado == null) {
+                // Novo estudante
+                Estudante estudante = new Estudante(
+                        txtNome.getText(),
+                        txtCpf.getText(),
+                        txtEmail.getText(),
+                        txtTelefone.getText(),
+                        txtEndereco.getText(),
+                        cursoSelecionado
+                );
+                estudanteController.cadastrar(estudante);
+                JOptionPane.showMessageDialog(this, "Estudante cadastrado com sucesso!");
+            } else {
+                // Atualização
+                estudanteAtualizado.setNome(txtNome.getText());
+                estudanteAtualizado.setCpf(txtCpf.getText());
+                estudanteAtualizado.setEmail(txtEmail.getText());
+                estudanteAtualizado.setTelefone(txtTelefone.getText());
+                estudanteAtualizado.setEndereco(txtEndereco.getText());
+                estudanteAtualizado.setCurso(cursoSelecionado);
 
-            estudanteController.cadastrar(estudante);
+                estudanteController.atualizar(estudanteAtualizado);
+                JOptionPane.showMessageDialog(this, "Estudante atualizado com sucesso!");
 
-            JOptionPane.showMessageDialog(this, "Estudante cadastrado com sucesso!");
+                estudanteAtualizado = null; // limpa o objeto para próxima nova inserção
+            }
             limparCampos();
 
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Erro: " + ex.getMessage());
-            ex.printStackTrace();  // Isso ajuda a ver o erro completo no console
+            ex.printStackTrace();
         }
     }
-
 
     private void limparCampos() {
         txtNome.setText("");
@@ -129,5 +144,17 @@ public class TelaCadastroEstudante extends JPanel {
         if (comboCurso.getItemCount() > 0) {
             comboCurso.setSelectedIndex(0);
         }
+        estudanteAtualizado = null; // Limpa o objeto de edição também ao limpar campos
+    }
+
+    // Método público para carregar um estudante para editar
+    public void carregarParaEditar(Estudante estudante) {
+        estudanteAtualizado = estudante;
+        txtNome.setText(estudante.getNome());
+        txtCpf.setText(estudante.getCpf());
+        txtEmail.setText(estudante.getEmail());
+        txtTelefone.setText(estudante.getTelefone());
+        txtEndereco.setText(estudante.getEndereco());
+        comboCurso.setSelectedItem(estudante.getCurso());
     }
 }

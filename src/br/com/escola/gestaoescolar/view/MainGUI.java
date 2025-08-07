@@ -2,128 +2,83 @@ package br.com.escola.gestaoescolar.view;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class MainGUI extends JFrame {
 
-    // Agora o CardLayout e o painel central são atributos
     private CardLayout cardLayout;
     private JPanel painelCentral;
+
+    private TelaCadastroCurso telaCadastroCurso;
+    private TelaListarCursos telaListarCursos;
+    private TelaCadastroEstudante telaCadastroEstudante;
+    private TelaListarEstudantes telaListarEstudantes;
+    private TelaCadastroTurma telaCadastroTurma;
+    private TelaListarTurmas telaListarTurmas;
+
+    public static final String TELA_CADASTRO_CURSO = "cadastroCurso";
+    public static final String TELA_LISTAR_CURSOS = "listarCursos";
+    public static final String TELA_CADASTRO_ESTUDANTE = "cadastroEstudante";
+    public static final String TELA_LISTAR_ESTUDANTES = "listarEstudantes";
+    public static final String TELA_CADASTRO_TURMA = "cadastroTurma";
+    public static final String TELA_LISTAR_TURMAS = "listarTurmas";
 
     public MainGUI() {
         setTitle("Gestão Escolar - Interface Gráfica");
         setSize(1100, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null); // Centraliza a janela
+        setLocationRelativeTo(null);
 
-        // Painel central com CardLayout
         cardLayout = new CardLayout();
         painelCentral = new JPanel(cardLayout);
 
-        // Criar as telas
-        TelaCadastroCurso telaCadastroCurso = new TelaCadastroCurso();
-        TelaListarCursos telaListarCursos = new TelaListarCursos();
+        telaCadastroCurso = new TelaCadastroCurso();
+        telaListarCursos = new TelaListarCursos(telaCadastroCurso,this);
+        telaCadastroEstudante = new TelaCadastroEstudante();
+        telaListarEstudantes = new TelaListarEstudantes(telaCadastroEstudante, this);
+        telaCadastroTurma = new TelaCadastroTurma();
+        telaListarTurmas = new TelaListarTurmas();
 
-        TelaCadastroEstudante telaCadastroEstudante = new TelaCadastroEstudante();
-        TelaListarEstudantes telaListarEstudantes = new TelaListarEstudantes();
+        painelCentral.add(telaCadastroCurso, TELA_CADASTRO_CURSO);
+        painelCentral.add(telaListarCursos, TELA_LISTAR_CURSOS);
+        painelCentral.add(telaCadastroEstudante, TELA_CADASTRO_ESTUDANTE);
+        painelCentral.add(telaListarEstudantes, TELA_LISTAR_ESTUDANTES);
+        painelCentral.add(telaCadastroTurma, TELA_CADASTRO_TURMA);
+        painelCentral.add(telaListarTurmas, TELA_LISTAR_TURMAS);
 
-        TelaCadastroTurma telaCadastroTurma = new TelaCadastroTurma();
-        TelaListarTurmas telaListarTurmas = new TelaListarTurmas();
-
-        // Adidionar telas ao painel central
-        painelCentral.add(telaCadastroCurso, "cadastroCurso");
-        painelCentral.add(telaListarCursos, "listarCursos");
-
-        painelCentral.add(telaCadastroEstudante, "cadastroEstudante");
-        painelCentral.add(telaListarEstudantes, "listarEstudantes");
-
-        painelCentral.add(telaCadastroTurma, "cadastroTurma");
-        painelCentral.add(telaListarTurmas, "listarTurmas");
-
-        // Criar menu lateral
-        JPanel menuLateral = new JPanel();
-        menuLateral.setLayout(new GridLayout(10, 1, 5, 5));
-
+        JPanel menuLateral = new JPanel(new GridLayout(10, 1, 5, 5));
         JButton btnCadastroCurso = new JButton("Cadastro Curso");
         JButton btnListarCursos = new JButton("Listar Cursos");
-
         JButton btnCadastroEstudante = new JButton("Cadastro Estudante");
         JButton btnListarEstudantes = new JButton("Listar Estudantes");
-
         JButton btnCadastroTurma = new JButton("Cadastro Turma");
         JButton btnListarTurmas = new JButton("Listar Turmas");
-
         JButton btnSair = new JButton("Sair");
-
-        // Adicionar botões no menu lateral
 
         menuLateral.add(btnCadastroCurso);
         menuLateral.add(btnListarCursos);
-
         menuLateral.add(btnCadastroEstudante);
         menuLateral.add(btnListarEstudantes);
-
         menuLateral.add(btnCadastroTurma);
         menuLateral.add(btnListarTurmas);
-
         menuLateral.add(btnSair);
 
-        // Eventos do menu
-        btnCadastroCurso.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                cardLayout.show(painelCentral, "cadastroCurso");
-            }
+        btnCadastroCurso.addActionListener(e -> mostrarTela(TELA_CADASTRO_CURSO));
+        btnListarCursos.addActionListener(e -> {
+            telaListarCursos.carregarCursos();
+            mostrarTela(TELA_LISTAR_CURSOS);
         });
-
-        btnListarCursos.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Atualiza tabela antes de mostrar
-                telaListarCursos.carregarCursos();
-                cardLayout.show(painelCentral, "listarCursos");
-            }
+        btnCadastroEstudante.addActionListener(e -> mostrarTela(TELA_CADASTRO_ESTUDANTE));
+        btnListarEstudantes.addActionListener(e -> {
+            telaListarEstudantes.carregarEstudantes();
+            mostrarTela(TELA_LISTAR_ESTUDANTES);
         });
-
-        btnCadastroEstudante.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                cardLayout.show(painelCentral, "cadastroEstudante");
-            }
+        btnCadastroTurma.addActionListener(e -> mostrarTela(TELA_CADASTRO_TURMA));
+        btnListarTurmas.addActionListener(e -> {
+            telaListarTurmas.carregarTurmas();
+            mostrarTela(TELA_LISTAR_TURMAS);
         });
+        btnSair.addActionListener(e -> dispose());
 
-        btnListarEstudantes.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                telaListarEstudantes.carregarEstudantes();
-                cardLayout.show(painelCentral, "listarEstudantes");
-            }
-        });
-
-        btnCadastroTurma.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                cardLayout.show(painelCentral, "cadastroTurma");
-            }
-        });
-
-        btnListarTurmas.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                telaListarTurmas.carregarTurmas();
-                cardLayout.show(painelCentral, "listarTurmas");
-            }
-        });
-
-        btnSair.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dispose();
-            }
-        });
-
-        // Layout principal
         setLayout(new BorderLayout());
         add(menuLateral, BorderLayout.WEST);
         add(painelCentral, BorderLayout.CENTER);
@@ -131,13 +86,11 @@ public class MainGUI extends JFrame {
         setVisible(true);
     }
 
+    public void mostrarTela(String nomeTela) {
+        cardLayout.show(painelCentral, nomeTela);
+    }
+
     public static void main(String[] args) {
-        // Executa na thread correta do Swing
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new MainGUI();
-            }
-        });
+        SwingUtilities.invokeLater(MainGUI::new);
     }
 }

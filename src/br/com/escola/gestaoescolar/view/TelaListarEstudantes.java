@@ -13,12 +13,18 @@ public class TelaListarEstudantes extends JPanel {
     private JTable tabelaEstudantes;
     private DefaultTableModel tabela;
     private EstudanteDAO estudanteDAO = new EstudanteDAO();
+    private JButton btnEditar;
     private JButton btnExcluir;
 
-    public TelaListarEstudantes() {
+    private TelaCadastroEstudante telaCadastroEstudante;
+    private MainGUI mainGUI;
+
+    public TelaListarEstudantes(TelaCadastroEstudante telaCadastroEstudante, MainGUI mainGUI) {
+        this.telaCadastroEstudante = telaCadastroEstudante;
+        this.mainGUI = mainGUI;
+
         setLayout(new BorderLayout());
 
-        // Agora a primeira coluna é o CÓDIGO
         tabela = new DefaultTableModel(
                 new Object[]{"Código", "Nome", "CPF", "Email", "Telefone", "Endereço"}, 0
         );
@@ -28,17 +34,23 @@ public class TelaListarEstudantes extends JPanel {
         add(scrollPane, BorderLayout.CENTER);
 
         JPanel painelBotoes = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+
+        btnEditar = new JButton("Editar Estudante");
         btnExcluir = new JButton("Excluir Estudante");
+
+        painelBotoes.add(btnEditar);
         painelBotoes.add(btnExcluir);
+
         add(painelBotoes, BorderLayout.SOUTH);
 
+        btnEditar.addActionListener(e -> editarEstudante());
         btnExcluir.addActionListener(e -> excluirEstudante());
     }
 
     private void excluirEstudante() {
         int linhaSelecionada = tabelaEstudantes.getSelectedRow();
         if (linhaSelecionada >= 0) {
-            Integer codigo = (Integer) tabela.getValueAt(linhaSelecionada, 0); // CÓDIGO como identificador
+            Integer codigo = (Integer) tabela.getValueAt(linhaSelecionada, 0);
             int confirm = JOptionPane.showConfirmDialog(
                     null,
                     "Confirma exclusão do estudante selecionado?",
@@ -46,7 +58,7 @@ public class TelaListarEstudantes extends JPanel {
                     JOptionPane.YES_NO_OPTION
             );
             if (confirm == JOptionPane.YES_OPTION) {
-                boolean sucesso = estudanteDAO.excluir(Integer.valueOf(codigo));
+                boolean sucesso = estudanteDAO.excluir(codigo);
                 if (sucesso) {
                     JOptionPane.showMessageDialog(null, "Estudante excluído com sucesso!");
                     carregarEstudantes();
@@ -56,6 +68,29 @@ public class TelaListarEstudantes extends JPanel {
             }
         } else {
             JOptionPane.showMessageDialog(null, "Selecione um estudante para excluir.");
+        }
+    }
+
+    private void editarEstudante() {
+        int linhaSelecionada = tabelaEstudantes.getSelectedRow();
+        if (linhaSelecionada >= 0) {
+            Integer codigo = (Integer) tabela.getValueAt(linhaSelecionada, 0);
+            String nome = (String) tabela.getValueAt(linhaSelecionada, 1);
+            String cpf = (String) tabela.getValueAt(linhaSelecionada, 2);
+            String email = (String) tabela.getValueAt(linhaSelecionada, 3);
+            String telefone = (String) tabela.getValueAt(linhaSelecionada, 4);
+            String endereco = (String) tabela.getValueAt(linhaSelecionada,5);
+
+            Estudante estudante = new Estudante(codigo, nome, cpf, email, telefone, endereco, null);
+
+            // Chama o formulário de cadastro para editar
+            telaCadastroEstudante.carregarParaEditar(estudante);
+
+            // Trocar para tela cadastroEstudante via MainGUI
+            mainGUI.mostrarTela(MainGUI.TELA_CADASTRO_ESTUDANTE);
+
+        } else {
+            JOptionPane.showMessageDialog(null, "Selecione um estudante para editar.");
         }
     }
 

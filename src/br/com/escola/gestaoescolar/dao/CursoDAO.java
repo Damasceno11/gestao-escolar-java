@@ -21,12 +21,29 @@ public class CursoDAO {
             stmt.setString(1, curso.getCodigo());
             stmt.setString(2, curso.getNome());
             stmt.setInt(3, curso.getCargaHoraria());
-            // Usar setObject com Types.OTHER para enum PostgreSQL
-            stmt.setString(4, curso.getNivel().name()); // Usar enum sem acento para banco
+            stmt.setString(4, curso.getNivel().name());
             stmt.executeUpdate();
 
         } catch (SQLException e) {
             throw new RuntimeException("Erro ao inserir curso no PostgreSQL: " + e.getMessage(), e);
+        }
+    }
+
+    // NOVO método para atualizar Curso
+    public boolean atualizar(Curso curso) {
+        String sql = "UPDATE curso SET nome = ?, carga_horaria = ?, nivel = ?::nivel_enum WHERE codigo = ?";
+
+        try (Connection conn = ConexaoPostgres.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, curso.getNome());
+            stmt.setInt(2, curso.getCargaHoraria());
+            stmt.setString(3, curso.getNivel().name());
+            stmt.setString(4, curso.getCodigo());
+            return stmt.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao atualizar curso: " + e.getMessage(), e);
         }
     }
 
